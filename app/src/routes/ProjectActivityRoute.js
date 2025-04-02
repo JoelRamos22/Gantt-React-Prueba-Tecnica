@@ -5,7 +5,7 @@ const controller = require('../controllers/projectActivityController');
 /**
  * @swagger
  * tags:
- *   - name: proyectos
+ *   - name: Project tasks
  *     description: Endpoints relacionados con la gestión de actividades de proyectos
  */
 
@@ -16,7 +16,7 @@ const controller = require('../controllers/projectActivityController');
  *   get:
  *     summary: Obtiene todas las actividades de proyecto
  *     tags: 
- *       - proyectos
+ *       - Project tasks
  *     responses:
  *       200:
  *         description: Lista de todas las actividades de proyecto.
@@ -56,7 +56,7 @@ router.get('/', controller.getAll);
  *   get:
  *     summary: Obtiene una actividad de proyecto por su ID
  *     tags: 
- *       - proyectos
+ *       - Project tasks
  *     parameters:
  *       - in: path
  *         name: id
@@ -104,7 +104,7 @@ router.get('/:id', controller.getById);
  *   post:
  *     summary: Crea una nueva actividad de proyecto
  *     tags: 
- *       - proyectos
+ *       - Project tasks
  *     requestBody:
  *       required: true
  *       content:
@@ -141,7 +141,7 @@ router.post('/create/', controller.create);
  *   put:
  *     summary: Actualiza una actividad de proyecto
  *     tags: 
- *       - proyectos
+ *       - Project tasks
  *     parameters:
  *       - in: path
  *         name: id
@@ -187,7 +187,7 @@ router.put('/update/:id', controller.update);
  *   delete:
  *     summary: Elimina una actividad de proyecto
  *     tags: 
- *       - proyectos
+ *       - Project tasks
  *     parameters:
  *       - in: path
  *         name: id

@@ -8,7 +8,7 @@ const sequelize = require('./config/database');
 const projectRoutes = require('./src/routes/ProjectActivityRoute');
 const healthRoutes = require('./src/routes/health');
 const taskRoutes = require('./src/routes/TaskRoute');
-// const subTaskRoutes = require('./routes/subTaskRoutes');
+const SubTaskRoutes = require('./src/routes/SubTaskRoute');
 
 const app = express();
 app.use(cors())
@@ -21,7 +21,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/projects', projectRoutes);
 app.use('/health', healthRoutes);
 app.use('/tasks', taskRoutes);
-// app.use('/api/subtasks', subTaskRoutes);
+app.use('/subtasks', SubTaskRoutes);
 
 // Sincronizacion con la base de datos
 sequelize.sync({ alter: true }).then(async () => {

@@ -8,7 +8,7 @@ const Taskscontroller = require('../controllers/TaskController');
  *   get:
  *     summary: Obtiene todas las tareas de un proyecto
  *     tags:
- *       - Actividades Principales
+ *       - Tasks
  *     parameters:
  *       - in: path
  *         name: projectActivityId
@@ -30,7 +30,7 @@ router.get('/:projectActivityId', Taskscontroller.getAllByProject);
  *   get:
  *     summary: Obtiene una tarea por su ID
  *     tags:
- *       - Actividades Principales
+ *       - Tasks
  *     parameters:
  *       - in: path
  *         name: id
@@ -54,7 +54,7 @@ router.get('/:id', Taskscontroller.getById);
  *   post:
  *     summary: Crea una nueva tarea en un proyecto específico
  *     tags:
- *       - Actividades Principales
+ *       - Tasks
  *     parameters:
  *       - in: path
  *         name: projectActivityId
@@ -99,7 +99,7 @@ router.post('/create/:projectActivityId', Taskscontroller.create);
  *   put:
  *     summary: Actualiza los datos de una tarea existente
  *     tags:
- *       - Actividades Principales
+ *       - Tasks
  *     parameters:
  *       - in: path
  *         name: id
@@ -144,7 +144,7 @@ router.put('/update/:id', Taskscontroller.update);
  *   delete:
  *     summary: Elimina una tarea específica
  *     tags:
- *       - Actividades Principales
+ *       - Tasks
  *     parameters:
  *       - in: path
  *         name: id
