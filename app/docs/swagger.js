@@ -17,6 +17,10 @@ const options = {
         },
         servers: [
             {
+                url: 'https://gantt-react-prueba-tecnica-production.up.railway.app',
+                description: 'Produccion Server'
+            },
+            {
                 url: 'http://localhost:3000',
                 description: 'Local server'
             }

@@ -1,97 +1,79 @@
-# Prueba Técnica - In Projects Software
+# **📌 Prueba Técnica - In Projects Software**  
 
-**Autor:** Germán Joel Ramos Jaimes
+**Autor:** Germán Joel Ramos Jaimes  
 
-## 📌 Desafío
+## **📍 Descripción del Proyecto**  
 
-El objetivo de esta prueba técnica es desarrollar un **diagrama de Gantt** en React utilizando la librería **DHTMLX Gantt**, asegurando la implementación de funcionalidades CRUD y el almacenamiento de datos en una base de datos SQLite.
+Este proyecto implementa un **Diagrama de Gantt interactivo** en **React** utilizando **DHTMLX Gantt**, permitiendo la gestión eficiente de actividades y subactividades. Se ha desarrollado un backend en **Node.js con Express** para manejar las operaciones CRUD, y los datos se almacenan en **PostgreSQL** a través de **Railway**.  
 
-## 📋 Requerimientos
+El sistema permite:  
 
-- Implementar un **componente en React** que utilice **DHTMLX Gantt** para visualizar las tareas.
-- Crear las siguientes estructuras dentro del Gantt:
-  - **Actividades principales (tasks)**.
-  - **Subactividades (subtasks)** anidadas correctamente bajo una actividad principal.
-  - **Actividades tipo proyecto (project tasks)** para agrupar varias actividades.
-- Implementar funcionalidades **CRUD** (Crear, Leer, Actualizar y Eliminar) para:
-  - **Actividades principales**.
-  - **Subactividades**.
-- Almacenar los datos en una base de datos, usando **SQLite**.
-- Permitir la **edición de tareas** dentro del Gantt.
-- Desarrollar un **backend en Node.js con Express** para manejar las operaciones sobre la base de datos.
-
-## 📌 Requisitos adicionales
-
-- El código debe estar alojado en **GitHub**.
-- Se deben realizar al menos **5 commits** en el repositorio, reflejando el progreso del desarrollo.
-- Crear una **rama de prueba (test-branch)** para probar cambios antes de fusionarlos con la rama principal.
+✅ **Visualizar tareas** en un Gantt interactivo.  
+✅ **Crear, editar y eliminar** actividades principales y subtareas.  
+✅ **Sincronización en tiempo real** con la base de datos.  
+✅ **Documentación de la API con Swagger**.  
 
 ---
 
-## 🚀 Tecnologías Utilizadas
+## **🚀 Tecnologías Utilizadas**  
 
 | Tecnología      | Descripción |
 |---------------|------------|
 | **React.js**  | Biblioteca para construir la interfaz de usuario. |
 | **Node.js**   | Entorno de ejecución para el backend. |
-| **Express.js** | Framework minimalista para manejar rutas y lógica del backend. |
-| **SQLite**    | Base de datos ligera para almacenar las tareas del Gantt. |
-| **Sequelize** | ORM para gestionar la base de datos de manera más eficiente. |
-| **DHTMLX Gantt** | Librería para visualizar el diagrama de Gantt en el frontend. |
-| **Swagger**   | Documentación interactiva de la API. |
+| **Express.js** | Framework para la API REST. |
+| **PostgreSQL** | Base de datos relacional alojada en Railway. |
+| **Sequelize** | ORM para interactuar con PostgreSQL. |
+| **DHTMLX Gantt** | Librería para gestionar y visualizar el diagrama de Gantt. |
+| **Swagger**   | Herramienta para documentar y probar la API. |
+| **Railway**   | Plataforma de hosting para el backend y la base de datos. |
+| **Vercel**    | Plataforma de hosting para el frontend. |
 
 ---
 
-## 🗂️ Estructura del Proyecto
+## **📂 Estructura del Proyecto**  
 
-Se utilizo el modelo MVC (Modelo-Vista-Controlador) para estructurar el proyecto.
+El proyecto sigue el **modelo MVC** para una mejor organización.  
 
-```bash
+\`\`\`bash
 📂 Proyecto
- ├── 📁 Client  # Aplicación en React con DHTMLX Gantt
- ├── 📁 App     # API en Node.js con Express
+ ├── 📁 client  # Aplicación en React con DHTMLX Gantt (Frontend)
+ ├── 📁 app     # API en Node.js con Express (Backend)
  │    ├── 📁 config      # Configuración de la base de datos
- │    ├── 📁 docs        # Configuración de Swagger
+ │    ├── 📁 docs        # Documentación con Swagger
  │    ├── 📁 src
- │    │    ├── 📁 models      # Definición de modelos con Sequelize
- │    │    ├── 📁 routes      # Rutas para las operaciones CRUD
- │    │    ├── 📁 controllers # Lógica de negocio
+ │    │    ├── 📁 models      # Modelos de la base de datos con Sequelize
+ │    │    ├── 📁 routes      # Definición de rutas de la API
+ │    │    ├── 📁 controllers # Lógica de negocio para CRUD
  │    ├── server.js     # Punto de entrada del backend
- ├── 📁 database  # Base de datos SQLite almacenada en `/app/tmp/`
-```
----
-
-## 📊 Base de Datos
-
-La base de datos SQLite se almacena en la ruta /app/tmp/database.sqlite. Todos los datos creados desde el CRUD se guardan aquí.
-
-Si deseas restablecer la base de datos, simplemente elimina el archivo y reinicia el servidor.
-
-```bash
-rm /app/tmp/database.sqlite
-npm start
-```
----
-
-## 🔗 Documentación de la API
-
-Puedes acceder a la documentación completa de la API en Swagger a través de la siguiente URL:
-
-🔗 http://localhost:3000/api-docs/#/
-
-Aquí encontrarás detalles sobre los endpoints disponibles y cómo interactuar con ellos.
+ ├── 📁 database  # Base de datos PostgreSQL alojada en Railway
+\`\`\`
 
 ---
 
-## 🎥 Tutorial del Gantt
+## **🌐 Despliegue en Producción**  
 
-Aquí tienes un GIF mostrando cómo usar el diagrama de Gantt, crear tareas y editarlas en tiempo real.
+- **Frontend (React) alojado en Vercel**: 🔗 [Enlace al Frontend](https://gantt-react.vercel.app)  
+- **Backend (API en Express) alojado en Railway**: 🔗 [Enlace al Backend](https://gantt-react-prueba-tecnica-production.up.railway.app/health/status)  
+- **Documentación Swagger**: 🔗 [API Docs](https://gantt-react-prueba-tecnica-production.up.railway.app/api-docs/#/)  
 
 ---
 
-## 📌 Notas Finales
+## **📊 Base de Datos**  
 
-Se han utilizado Better Comments para agregar comentarios detallados dentro del código.
+Se utilizó **PostgreSQL**, alojado en **Railway**, con Sequelize como ORM.  
 
-🚀 ¡Muchas gracias por tu atención y feliz coding! 🎉
+📌 **Modelo de Datos Principal (\`tasks\`)**  
 
+| Campo      | Tipo           | Descripción |
+|------------|--------------|-------------|
+| \`id\`       | INTEGER (PK) | Identificador único de la tarea. |
+| \`name\`     | STRING       | Nombre de la tarea. |
+| \`startDate\` | STRING      | Fecha de inicio. |
+| \`duration\`  | INTEGER     | Duración en días. |
+| \`endDate\`   | STRING      | Fecha de finalización. |
+| \`parentId\`  | INTEGER (FK) | Referencia a la tarea padre (subtareas). |
+
+---
+
+¡Gracias por revisar el proyecto! 🎉 🚀

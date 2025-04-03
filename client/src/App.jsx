@@ -47,7 +47,7 @@
   
     async function fetchData() {
       try {
-        const res = await fetch("http://localhost:3000/tasks");
+        const res = await fetch("gantt-react-prueba-tecnica-production.up.railway.app/tasks");
         const data = await res.json();
         console.log("Datos recibidos:", data);
   
