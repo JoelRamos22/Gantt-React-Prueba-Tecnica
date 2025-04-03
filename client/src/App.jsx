@@ -97,7 +97,7 @@
   
     useEffect(() => {
       fetchData();
-    }, [refreshTrigger]); // 🔹 Se ejecutará cuando cambie refreshTrigger
+    }, [refreshTrigger]); 
   
     return <GanttView task={tasks} triggerRefresh={() => setRefreshTrigger(prev => !prev)} />;
   }

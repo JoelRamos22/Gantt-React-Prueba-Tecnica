@@ -2,6 +2,11 @@ import { useEffect, useRef } from "react";
 import { Gantt } from "@dhx/trial-gantt";
 import "@dhx/trial-gantt/codebase/dhtmlxgantt.css";
 
+/**
+ * @description Formatea la fecha para ser utilizada en el Gantt
+ * @param {Date | string} date - Fecha en formato Date o string
+ * @returns {string} Fecha formateada como "DD-MM-YYYY HH:mm"
+ */
 const formatDateForGantt = (date) => {
   if (!date) return "";
 
@@ -51,6 +56,11 @@ export default function GanttView({ task, triggerRefresh }) {
       ganttInstance.current.config.start_date = new Date(2010, 0, 1);
       ganttInstance.current.config.end_date = new Date(2027, 11, 31);
 
+      /**
+       * @description Evento que se ejecuta después de agregar una tarea
+       * @param {number} id - ID temporal de la tarea en el frontend
+       * @param {object} task - Datos de la tarea creada
+       */
       ganttInstance.current.attachEvent("onAfterTaskAdd", async (id, task) => {
         try {
           const parentId = task.parent && task.parent !== "0" ? Number(task.parent) : null;
@@ -79,6 +89,11 @@ export default function GanttView({ task, triggerRefresh }) {
         }
       });
 
+      /**
+       * @description Evento que se ejecuta después de actualizar una tarea
+       * @param {number} id - ID de la tarea
+       * @param {object} task - Datos de la tarea actualizada
+       */
       ganttInstance.current.attachEvent("onAfterTaskUpdate", async (id, task) => {
         try {
           await fetch(`http://localhost:3000/tasks/update/${id}`, {
@@ -100,6 +115,10 @@ export default function GanttView({ task, triggerRefresh }) {
         }
       });
 
+      /**
+       * @description Evento que se ejecuta después de eliminar una tarea
+       * @param {number} id - ID de la tarea eliminada
+       */
       ganttInstance.current.attachEvent("onAfterTaskDelete", async (id) => {
         try {
           await fetch(`http://localhost:3000/tasks/delete/${id}`, { method: "DELETE" });
@@ -112,6 +131,9 @@ export default function GanttView({ task, triggerRefresh }) {
     }
   }, []);
 
+  /**
+   * @description Efecto que actualiza el Gantt cuando cambian las tareas
+   */
   useEffect(() => {
     if (ganttInstance.current) {
       ganttInstance.current.clearAll();
