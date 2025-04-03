@@ -53,7 +53,7 @@ export default function GanttView({ task, triggerRefresh }) {
       ganttInstance.current.init(container.current);
 
 
-      ganttInstance.current.config.duration_step = 2;
+      ganttInstance.current.config.duration_step = 1;
       ganttInstance.current.config.start_date = new Date(2023, 0, 1);
       ganttInstance.current.config.end_date = new Date(2026, 11, 31);
 
