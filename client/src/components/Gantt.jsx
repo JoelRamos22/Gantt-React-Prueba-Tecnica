@@ -103,7 +103,7 @@ export default function GanttView({ task, triggerRefresh }) {
           const startDate = new Date(task.start_date);
       
           if (startDate < minDate) {
-              alert("No puedes crear tareas antes del 01-01-2023.");
+              alert("No puedes crear tareas antes del 01-01-2024.");
               return false; // Bloquea la tarea
           }
       
