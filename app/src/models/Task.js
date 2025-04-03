@@ -7,6 +7,11 @@ const Task = sequelize.define('Task', {
     startDate: { type: DataTypes.STRING, allowNull: false },
     duration: { type: DataTypes.INTEGER, allowNull: false },
     endDate: { type: DataTypes.STRING, allowNull: false },
+    projectId: { 
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: { model: 'projects', key: 'id' }
+    },
     parentId: { 
         type: DataTypes.INTEGER, 
         allowNull: true,  
@@ -17,6 +22,7 @@ const Task = sequelize.define('Task', {
     timestamps: true
 });
 
+//Relacion con subtareas (una tarea puede tener muchas subtareas)
 Task.hasMany(Task, { foreignKey: 'parentId', as: 'subtasks' });
 Task.belongsTo(Task, { foreignKey: 'parentId', as: 'parentTask' });
 
