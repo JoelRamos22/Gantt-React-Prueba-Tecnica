@@ -6,6 +6,7 @@ const cors = require('cors');
 const sequelize = require('./config/database');
 const healthRoutes = require('./src/routes/health');
 const taskRoutes = require('./src/routes/TaskRoute');
+const Task = require ('./src/models/Task');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
