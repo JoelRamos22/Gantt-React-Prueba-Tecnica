@@ -4,7 +4,33 @@ import GanttView from "./components/Gantt";
 // 🔹 Función para formatear fechas en el formato correcto para Gantt
 const formatDateForGantt = (date) => {
   if (!date) return "";
-  const d = new Date(date);
+
+  // 🔹 Convertir a string si es un objeto Date
+  if (date instanceof Date) {
+    date = date.toISOString().slice(0, 16).replace("T", " ");
+  }
+
+  if (typeof date !== "string") return ""; // Si no es string, retorna vacío
+
+  let d;
+  if (date.includes("-")) {
+    const parts = date.split(" ");
+    const dateParts = parts[0].split("-");
+
+    // Si el formato es "YYYY-MM-DD"
+    if (dateParts[0].length === 4) {
+      d = new Date(`${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T${parts[1] || "00:00"}`);
+    } 
+    // Si el formato es "DD-MM-YYYY"
+    else {
+      d = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}T${parts[1] || "00:00"}`);
+    }
+  } else {
+    d = new Date(date);
+  }
+
+  if (isNaN(d)) return "";
+
   const day = String(d.getDate()).padStart(2, "0");
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const year = d.getFullYear();
@@ -13,6 +39,8 @@ const formatDateForGantt = (date) => {
 
   return `${day}-${month}-${year} ${hours}:${minutes}`;
 };
+
+
 
 function App() {
   const [tasks, setTasks] = useState({ data: [] });
