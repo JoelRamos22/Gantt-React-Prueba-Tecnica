@@ -101,9 +101,11 @@ export default function GanttView({ task, triggerRefresh }) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               name: task.text,
-              startDate: task.start_date,
+              startDate: formatDateForGantt(task.start_date),
               duration: task.duration,
-              endDate: task.end_date,
+              endDate: formatDateForGantt(
+                new Date(task.start_date).setDate(new Date(task.start_date).getDate() + task.duration)
+              ),
               parentId: task.parent !== 0 ? task.parent : null,
             }),
           });
