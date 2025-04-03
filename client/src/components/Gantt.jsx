@@ -98,6 +98,17 @@ export default function GanttView({ task, triggerRefresh }) {
         }
       });
 
+      const minDate = new Date(2023, 0, 1);
+      ganttInstance.current.attachEvent("onBeforeTaskAdd", function (id, task) {
+          const startDate = new Date(task.start_date);
+      
+          if (startDate < minDate) {
+              alert("No puedes crear tareas antes del 01-01-2023.");
+              return false; // Bloquea la tarea
+          }
+      
+          return true; // Permite la creación
+      });
 
       /**
        * @description Evento que se ejecuta después de actualizar una tarea
