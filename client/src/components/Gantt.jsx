@@ -61,33 +61,43 @@ export default function GanttView({ task, triggerRefresh }) {
        * @param {number} id - ID temporal de la tarea en el frontend
        * @param {object} task - Datos de la tarea creada
        */
+
       ganttInstance.current.attachEvent("onAfterTaskAdd", async (id, task) => {
         try {
-          const parentId = task.parent && task.parent !== "0" ? Number(task.parent) : null;
-          
-          const res = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks/create", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: task.text,
-              startDate: formatDateForGantt(task.start_date),
-              duration: task.duration,
-              endDate: formatDateForGantt(
-                new Date(task.start_date).setDate(new Date(task.start_date).getDate() + task.duration)
-              ),
-              parentId: parentId, 
-            }),
-          });
-
-          const data = await res.json();
-          ganttInstance.current.changeTaskId(id, data.id);
-          console.log("Tarea creada con ID real:", data.id);
-
-          triggerRefresh(); // 🔹 Recarga App después de agregar una tarea
+            let parentId = null;
+    
+            if (task.parent && task.parent !== "0") {
+                parentId = Number(task.parent); 
+            }
+    
+            const res = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: task.text,
+                    startDate: formatDateForGantt(task.start_date),
+                    duration: task.duration,
+                    endDate: formatDateForGantt(
+                        new Date(task.start_date).setDate(new Date(task.start_date).getDate() + task.duration)
+                    ),
+                    parentId: parentId, 
+                }),
+            });
+    
+            const data = await res.json();
+    
+            if (!data.id) {
+                throw new Error("No se recibió un ID válido desde la API.");
+            }
+    
+            ganttInstance.current.changeTaskId(id, data.id);
+            console.log("Tarea creada con ID real:", data.id);
+    
+            triggerRefresh();
         } catch (error) {
-          console.error("Error al crear la tarea:", error);
+            console.error("Error al crear la tarea:", error);
         }
-      });
+    });
 
       /**
        * @description Evento que se ejecuta después de actualizar una tarea

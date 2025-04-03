@@ -70,10 +70,12 @@
             type: "project", 
             parent: 0,
           });
+          projectMap[p.id] = p.id;
         });
   
         // Procesar tareas
         tasksData.forEach((t) => {
+          const parentId = t.parentId ? t.parentId : (projectMap[t.projectId] || 0)
           processedTasks.push({
             id: t.id,
             text: t.name,
@@ -82,7 +84,7 @@
             end_date: formatDateForGantt(
               new Date(t.startDate).setDate(new Date(t.startDate).getDate() + t.duration)
             ),
-            parent: t.parentId || 0,
+            parent: parentId 
           });
   
           if (Array.isArray(t.subtasks) && t.subtasks.length > 0) {
