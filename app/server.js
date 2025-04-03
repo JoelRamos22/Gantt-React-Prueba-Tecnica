@@ -7,8 +7,6 @@ const sequelize = require('./config/database');
 const healthRoutes = require('./src/routes/health');
 const taskRoutes = require('./src/routes/TaskRoute');
 
-require('./src/models/Relations.js');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
