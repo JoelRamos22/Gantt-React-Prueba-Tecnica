@@ -53,30 +53,33 @@ export default function GanttView({ task }) {
 
       ganttInstance.current.attachEvent("onAfterTaskAdd", async (id, task) => {
         try {
-          const res = await fetch("http://localhost:3000/tasks/create", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: task.text,
-              startDate: formatDateForGantt(task.start_date),
-              duration: task.duration,
-              endDate: formatDateForGantt(
-                new Date(task.end_date).setDate(new Date(task.start_date).getDate() + task.duration)
-              ),
-              parentId: task.parent !== "0" ? task.parent : null,
-            }),
-          });
-
-          const data = await res.json();
-          ganttInstance.current.changeTaskId(id, data.id);
-          console.log("Tarea creada con ID real:", data.id);
-
-          await fetchUpdatedData();
-          ganttInstance.current.render();
+            const parentId = task.parent !== "0" ? task.parent : null; // 📌 Si tiene parent, lo asigna
+    
+            const res = await fetch("http://localhost:3000/tasks/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: task.text,
+                    startDate: formatDateForGantt(task.start_date),
+                    duration: task.duration,
+                    endDate: formatDateForGantt(
+                        new Date(task.start_date).setDate(new Date(task.start_date).getDate() + task.duration)
+                    ),
+                    parentId: parentId, // ✅ Guarda correctamente el parentId
+                }),
+            });
+    
+            const data = await res.json();
+            ganttInstance.current.changeTaskId(id, data.id);
+            console.log("Tarea creada con ID real:", data.id);
+    
+            await fetchUpdatedData();
+            ganttInstance.current.render();
         } catch (error) {
-          console.error("Error al crear la tarea:", error);
+            console.error("Error al crear la tarea:", error);
         }
-      });
+    });
+    
 
       ganttInstance.current.attachEvent("onAfterTaskUpdate", async (id, task) => {
         try {
