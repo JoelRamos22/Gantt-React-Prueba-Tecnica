@@ -6,7 +6,8 @@ const cors = require('cors');
 const sequelize = require('./config/database');
 const healthRoutes = require('./src/routes/health');
 const taskRoutes = require('./src/routes/TaskRoute');
-const Project = require('./src/models/Projects.js');
+const Project = require('./src/models/Projects');
+const projectRoutes = require('./src/routes/ProjectRoute');
 
 require('./src/models/Relations.js');
 
@@ -24,6 +25,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 /**
  * * Rutas de la API
  */
+app.use('/projects', projectRoutes);
 app.use('/health', healthRoutes);
 app.use('/tasks', taskRoutes);
 
@@ -40,14 +42,15 @@ async function insertDefaultProjects() {
             { name: 'Proyecto D', startDate: '2024-04-15 00:00', duration: 25, endDate: '2024-05-10 23:59' }
         ];
 
-        await Project.bulkCreate(projects, { ignoreDuplicates: true });
+        for (const project of projects) {
+            await Project.upsert(project); 
+        }
 
         console.log("✅ Proyectos predeterminados insertados correctamente.");
     } catch (error) {
         console.error("❌ Error insertando proyectos predeterminados:", error);
     }
 }
-
 
 /**
  * * Conectar con la base de datos y arrancar el servidor
