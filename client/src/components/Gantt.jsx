@@ -134,7 +134,7 @@ export default function GanttView({ task, triggerRefresh }) {
        */
       ganttInstance.current.attachEvent("onBeforeGanttRender", function () {
         const minDate = new Date(2023, 0, 1);
-        const maxDate = new Date(2030, 11, 31);
+        const maxDate = new Date(2026, 11, 31);
         const state = ganttInstance.current.getState();
 
         // Si la vista está fuera de los límites, la ajustamos
@@ -153,7 +153,7 @@ export default function GanttView({ task, triggerRefresh }) {
       */
       ganttInstance.current.attachEvent("onBeforeTaskDisplay", function (id, task) {
         const minDate = new Date(2023, 0, 1);
-        const maxDate = new Date(2030, 11, 31);
+        const maxDate = new Date(2026, 11, 31);
 
         // Convertimos las fechas de la tarea en objetos Date válidos
         const startDate = new Date(task.start_date);

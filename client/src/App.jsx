@@ -1,12 +1,6 @@
   import { useState, useEffect } from "react";
   import GanttView from "./components/Gantt";
 
-
-  /**
-   * @description Formatea la fecha para ser utilizada en el Gantt
-   * @param {Date | string} date - Fecha en formato Date o string
-   * @returns {string} Fecha formateada como "DD-MM-YYYY HH:mm"
-   */
   const formatDateForGantt = (date) => {
     if (!date) return "";
 
@@ -51,9 +45,6 @@
       const [tasks, setTasks] = useState({ data: [] });
       const [refreshTrigger, setRefreshTrigger] = useState(false);
     
-      /**
-       * @description Función que se ejecuta cuando se carga la página
-       */ 
       async function fetchData() {
         try {
           const res = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks");
@@ -62,38 +53,35 @@
     
           const processedTasks = [];
     
-          /** @description Iterar sobre cada tarea y sus subtareas para crear el formato esperado por el Gantt */
           data.forEach((t) => {
-            const startDate = new Date(t.startDate);
-            const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + t.duration);
-        
-            processedTasks.push({
-                id: t.id,
-                text: t.name,
-                start_date: formatDateForGantt(startDate),
-                duration: t.duration,
-                end_date: formatDateForGantt(endDate),
-                parent: t.parentId || 0, 
-            });
-        
-            if (t.subtasks && Array.isArray(t.subtasks) && t.subtasks.length > 0) {
-                t.subtasks.forEach((sub) => {
-                    const subStartDate = new Date(sub.startDate);
-                    const subEndDate = new Date(subStartDate);
-                    subEndDate.setDate(subStartDate.getDate() + sub.duration);
-        
-                    processedTasks.push({
-                        id: sub.id,
-                        text: sub.name,
-                        start_date: formatDateForGantt(subStartDate),
-                        duration: sub.duration,
-                        end_date: formatDateForGantt(subEndDate),
-                        parent: sub.parentId || t.id, 
-                    });
-                });
-            }
-        });
+              processedTasks.push({
+                  id: t.id,
+                  text: t.name,
+                  start_date: formatDateForGantt(t.startDate),
+                  duration: t.duration,
+                  end_date: formatDateForGantt(
+                      new Date(t.startDate).setDate(new Date(t.startDate).getDate() + t.duration)
+                  ),
+                  parent: t.parentId || 0, // Si no tiene parent, es una tarea raíz
+              });
+
+              // ✅ Verificar que t.subtasks está definido antes de iterar
+              if (t.subtasks && Array.isArray(t.subtasks) && t.subtasks.length > 0) {
+                  t.subtasks.forEach((sub) => {
+                      processedTasks.push({
+                          id: sub.id,
+                          text: sub.name,
+                          start_date: formatDateForGantt(sub.startDate),
+                          duration: sub.duration,
+                          end_date: formatDateForGantt(
+                              new Date(sub.startDate).setDate(new Date(sub.startDate).getDate() + sub.duration)
+                          ),
+                          parent: sub.parentId || t.id, 
+                      });
+                  });
+              } 
+          });
+
     
     
           setTasks({ data: processedTasks });
