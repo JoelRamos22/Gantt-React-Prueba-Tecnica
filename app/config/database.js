@@ -1,15 +1,16 @@
 const { Sequelize } = require('sequelize');
+require('dotenv').config(); 
 
-
-/**
- * * Creacion de una nueva instancia de Sequelize
-*/
-
-
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: './tmp/database.sqlite',
-  });
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    dialectOptions: {
+        ssl: {
+            require: true, 
+            rejectUnauthorized: false
+        }
+    },
+    logging: false, 
+});
 
 module.exports = sequelize;
 
