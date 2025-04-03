@@ -47,11 +47,9 @@
   
     async function fetchData() {
       try {
-        // Obtener tareas
         const tasksRes = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks");
         const tasksData = await tasksRes.json();
   
-        // Obtener proyectos
         const projectsRes = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/projects");
         const projectsData = await projectsRes.json();
   
@@ -60,7 +58,6 @@
   
         const processedTasks = [];
   
-        // Procesar proyectos
         projectsData.forEach((p) => {
           processedTasks.push({
             id: p.id,
@@ -70,7 +67,7 @@
             end_date: formatDateForGantt(
               new Date(p.startDate).setDate(new Date(p.startDate).getDate() + p.duration)
             ),
-            type: "project", // Agregado para diferenciar proyectos de tareas
+            type: "project", 
             parent: 0,
           });
         });
@@ -104,7 +101,6 @@
           }
         });
   
-        processedTasks.unshift(...defaultTasks);
   
         setTasks({ data: processedTasks });
       } catch (error) {
