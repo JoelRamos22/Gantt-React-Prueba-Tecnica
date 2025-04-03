@@ -62,9 +62,10 @@
                   end_date: formatDateForGantt(
                       new Date(t.startDate).setDate(new Date(t.startDate).getDate() + t.duration)
                   ),
-                  parent: t.parentId || 0, 
+                  parent: t.parentId || 0, // Si no tiene parent, es una tarea raíz
               });
 
+              // ✅ Verificar que t.subtasks está definido antes de iterar
               if (t.subtasks && Array.isArray(t.subtasks) && t.subtasks.length > 0) {
                   t.subtasks.forEach((sub) => {
                       processedTasks.push({
@@ -78,7 +79,7 @@
                           parent: sub.parentId || t.id, 
                       });
                   });
-              }
+              } 
           });
 
     
