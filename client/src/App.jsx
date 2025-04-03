@@ -40,65 +40,84 @@
   };
 
 
-  async function fetchData() {
-    try {
-        // 1️⃣ Hacer las dos peticiones en paralelo
-        const [tasksRes, projectsRes] = await Promise.all([
-            fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks"),
-            fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/projects")
-        ]);
 
-        const [tasksData, projectsData] = await Promise.all([
-            tasksRes.json(),
-            projectsRes.json()
-        ]);
-
+  function App() {
+    const [tasks, setTasks] = useState({ data: [] });
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
+  
+    async function fetchData() {
+      try {
+        // Obtener tareas
+        const tasksRes = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks");
+        const tasksData = await tasksRes.json();
+  
+        // Obtener proyectos
+        const projectsRes = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/projects");
+        const projectsData = await projectsRes.json();
+  
         console.log("Datos de tareas:", tasksData);
         console.log("Datos de proyectos:", projectsData);
-
+  
         const processedTasks = [];
-
-        // 2️⃣ Procesar PROYECTOS como tareas raíz
+  
+        // Procesar proyectos
         projectsData.forEach((p) => {
-            processedTasks.push({
-                id: `project-${p.id}`, // Prefijo para evitar colisión con tareas
-                text: p.name, 
-                start_date: formatDateForGantt(p.startDate),
-                duration: p.duration,
-                end_date: formatDateForGantt(new Date(p.startDate).setDate(new Date(p.startDate).getDate() + p.duration)),
-                type: "project",
-                parent: 0
-            });
+          processedTasks.push({
+            id: p.id,
+            text: p.name,
+            start_date: formatDateForGantt(p.startDate),
+            duration: p.duration,
+            end_date: formatDateForGantt(
+              new Date(p.startDate).setDate(new Date(p.startDate).getDate() + p.duration)
+            ),
+            type: "project", // Agregado para diferenciar proyectos de tareas
+            parent: 0,
+          });
         });
-
+  
+        // Procesar tareas
         tasksData.forEach((t) => {
-            processedTasks.push({
-                id: t.id,
-                text: t.name,
-                start_date: formatDateForGantt(t.startDate),
-                duration: t.duration,
-                end_date: formatDateForGantt(new Date(t.startDate).setDate(new Date(t.startDate).getDate() + t.duration)),
-                parent: t.parentId || `project-${t.projectId}`, // Asociar tareas a proyectos
+          processedTasks.push({
+            id: t.id,
+            text: t.name,
+            start_date: formatDateForGantt(t.startDate),
+            duration: t.duration,
+            end_date: formatDateForGantt(
+              new Date(t.startDate).setDate(new Date(t.startDate).getDate() + t.duration)
+            ),
+            parent: t.parentId || 0,
+          });
+  
+          if (Array.isArray(t.subtasks) && t.subtasks.length > 0) {
+            t.subtasks.forEach((sub) => {
+              processedTasks.push({
+                id: sub.id,
+                text: sub.name,
+                start_date: formatDateForGantt(sub.startDate),
+                duration: sub.duration,
+                end_date: formatDateForGantt(
+                  new Date(sub.startDate).setDate(new Date(sub.startDate).getDate() + sub.duration)
+                ),
+                parent: t.id,
+              });
             });
-
-            if (Array.isArray(t.subtasks) && t.subtasks.length > 0) {
-                t.subtasks.forEach((sub) => {
-                    processedTasks.push({
-                        id: sub.id,
-                        text: sub.name,
-                        start_date: formatDateForGantt(sub.startDate),
-                        duration: sub.duration,
-                        end_date: formatDateForGantt(new Date(sub.startDate).setDate(new Date(sub.startDate).getDate() + sub.duration)),
-                        parent: t.id,
-                    });
-                });
-            }
+          }
         });
-
+  
+        processedTasks.unshift(...defaultTasks);
+  
         setTasks({ data: processedTasks });
-
-    } catch (error) {
+      } catch (error) {
         console.error("Error al obtener datos del Gantt:", error);
+      }
     }
-}
+  
+    useEffect(() => {
+      fetchData();
+    }, [refreshTrigger]); 
+  
+    return <GanttView task={tasks} triggerRefresh={() => setRefreshTrigger(prev => !prev)} />;
+  }
+  
+  export default App;
   
