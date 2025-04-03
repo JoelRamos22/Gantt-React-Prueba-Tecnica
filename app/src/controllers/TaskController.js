@@ -1,5 +1,4 @@
 const Task = require('../models/Task');
-const sequelize = require('../../config/database');
 
 // Obtener todas las tareas con sus subtareas
 exports.getAllTasks = async (req, res) => {

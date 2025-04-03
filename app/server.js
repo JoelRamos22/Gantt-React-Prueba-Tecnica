@@ -6,8 +6,6 @@ const cors = require('cors');
 const sequelize = require('./config/database');
 const healthRoutes = require('./src/routes/health');
 const taskRoutes = require('./src/routes/TaskRoute');
-const Project = require('./src/models/Projects');
-const projectRoutes = require('./src/routes/ProjectRoute');
 
 require('./src/models/Relations.js');
 
@@ -25,7 +23,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 /**
  * * Rutas de la API
  */
-app.use('/projects', projectRoutes);
 app.use('/health', healthRoutes);
 app.use('/tasks', taskRoutes);
 
@@ -33,24 +30,30 @@ app.use('/tasks', taskRoutes);
 /**
  * * Cargar proyectos basicos en la base de datos
  */
-async function insertDefaultProjects() {
+async function insertDefaultProjectsAsTasks() {
     try {
-        const projects = [
-            { name: 'Proyecto A', startDate: '2024-04-01 00:00', duration: 10, endDate: '2024-04-11 23:59' },
-            { name: 'Proyecto B', startDate: '2024-04-05 00:00', duration: 15, endDate: '2024-04-20 23:59' },
-            { name: 'Proyecto C', startDate: '2024-04-10 00:00', duration: 20, endDate: '2024-04-30 23:59' },
-            { name: 'Proyecto D', startDate: '2024-04-15 00:00', duration: 25, endDate: '2024-05-10 23:59' }
-        ];
-
-        for (const project of projects) {
-            await Project.upsert(project); 
-        }
-
-        console.log("✅ Proyectos predeterminados insertados correctamente.");
+      const projects = [
+        { name: "Proyecto A", startDate: "2024-04-01 00:00", duration: 10, endDate: "2024-04-11 23:59" },
+        { name: "Proyecto B", startDate: "2024-04-05 00:00", duration: 15, endDate: "2024-04-20 23:59" },
+        { name: "Proyecto C", startDate: "2024-04-10 00:00", duration: 20, endDate: "2024-04-30 23:59" },
+        { name: "Proyecto D", startDate: "2024-04-15 00:00", duration: 25, endDate: "2024-05-10 23:59" },
+      ];
+  
+      for (const project of projects) {
+        await Task.upsert({
+          name: project.name,
+          startDate: project.startDate, 
+          duration: project.duration,
+          endDate: project.endDate, 
+          parentId: null, 
+        });
+      }
+  
+      console.log("✅ Tareas 'proyecto' insertadas correctamente.");
     } catch (error) {
-        console.error("❌ Error insertando proyectos predeterminados:", error);
+      console.error("❌ Error insertando tareas 'proyecto':", error);
     }
-}
+  }
 
 /**
  * * Conectar con la base de datos y arrancar el servidor
@@ -63,7 +66,7 @@ async function insertDefaultProjects() {
         await sequelize.sync({ alter: true }); 
         console.log("🔹 Base de datos sincronizada.");
 
-        await insertDefaultProjects();  
+        await insertDefaultProjectsAsTasks();  
 
         app.listen(PORT, () => console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`));
     } catch (error) {

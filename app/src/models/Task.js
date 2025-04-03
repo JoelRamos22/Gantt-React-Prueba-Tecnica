@@ -7,11 +7,6 @@ const Task = sequelize.define('Task', {
     startDate: { type: DataTypes.STRING, allowNull: false },
     duration: { type: DataTypes.INTEGER, allowNull: false },
     endDate: { type: DataTypes.STRING, allowNull: false },
-    projectId: { 
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: { model: 'projects', key: 'id' }
-    },
     parentId: { 
         type: DataTypes.INTEGER, 
         allowNull: true,  
