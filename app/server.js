@@ -32,10 +32,10 @@ app.use('/tasks', taskRoutes);
 async function insertDefaultProjectsAsTasks() {
     try {
         const projects = [
-            { name: "Proyecto A", startDate: "2024-04-01 00:00", duration: 10, endDate: "2024-04-11 23:59" },
-            { name: "Proyecto B", startDate: "2024-04-05 00:00", duration: 15, endDate: "2024-04-20 23:59" },
-            { name: "Proyecto C", startDate: "2024-04-10 00:00", duration: 20, endDate: "2024-04-30 23:59" },
-            { name: "Proyecto D", startDate: "2024-04-15 00:00", duration: 25, endDate: "2024-05-10 23:59" },
+            { name: "Proyecto A", startDate: "2024-02-01 00:00", duration: 10, endDate: "2024-04-11 23:59" },
+            { name: "Proyecto B", startDate: "2024-03-05 00:00", duration: 15, endDate: "2024-04-20 23:59" },
+            { name: "Proyecto C", startDate: "2024-03-10 00:00", duration: 20, endDate: "2024-04-30 23:59" },
+            { name: "Proyecto D", startDate: "2024-02-15 00:00", duration: 25, endDate: "2024-05-10 23:59" },
         ];
 
         for (const project of projects) {
