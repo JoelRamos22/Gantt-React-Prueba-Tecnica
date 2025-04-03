@@ -9,7 +9,7 @@ const Task = sequelize.define('Task', {
     endDate: { type: DataTypes.STRING, allowNull: false },
     parentId: { 
         type: DataTypes.INTEGER, 
-        allowNull: true,  // 🔹 NULL significa que es una tarea principal
+        allowNull: true,  
         references: { model: 'tasks', key: 'id' }
     }
 }, {
@@ -17,9 +17,7 @@ const Task = sequelize.define('Task', {
     timestamps: true
 });
 
-// 🔹 Relación para obtener subtareas de una tarea
 Task.hasMany(Task, { foreignKey: 'parentId', as: 'subtasks' });
-// 🔹 Relación para obtener la tarea padre de una subtarea
 Task.belongsTo(Task, { foreignKey: 'parentId', as: 'parentTask' });
 
 module.exports = Task;
