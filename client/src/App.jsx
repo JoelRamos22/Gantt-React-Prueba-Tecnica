@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import GanttView from "./components/Gantt";
 
+// 🔹 Función para formatear fechas en el formato correcto para Gantt
 const formatDateForGantt = (date) => {
   if (!date) return "";
   const d = new Date(date);
@@ -22,20 +23,40 @@ function App() {
       const data = await res.json();
       console.log("Datos recibidos:", data);
 
-      const ganttData = {
-        data: data.map((t) => ({
+      // 🔥 Convertir tareas y sus subtareas en formato válido para Gantt
+      const processedTasks = [];
+
+      data.forEach((t) => {
+        // Agregar la tarea principal
+        processedTasks.push({
           id: t.id,
           text: t.name,
-          start_date: formatDateForGantt(t.startDate), // 🔹 Formatear fecha
+          start_date: formatDateForGantt(t.startDate),
           duration: t.duration,
           end_date: formatDateForGantt(
             new Date(t.startDate).setDate(new Date(t.startDate).getDate() + t.duration)
           ),
           parent: t.parentId || 0,
-        })),
-      };
+        });
 
-      setTasks(ganttData);
+        // Si la tarea tiene subtareas, agregarlas con su parent asignado
+        if (Array.isArray(t.subtasks) && t.subtasks.length > 0) {
+          t.subtasks.forEach((sub) => {
+            processedTasks.push({
+              id: sub.id,
+              text: sub.name,
+              start_date: formatDateForGantt(sub.startDate),
+              duration: sub.duration,
+              end_date: formatDateForGantt(
+                new Date(sub.startDate).setDate(new Date(sub.startDate).getDate() + sub.duration)
+              ),
+              parent: t.id, // 📌 La subtarea tiene como parent el ID de la tarea principal
+            });
+          });
+        }
+      });
+
+      setTasks({ data: processedTasks });
     } catch (error) {
       console.error("Error al obtener datos del Gantt:", error);
     }
