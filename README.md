@@ -13,6 +13,8 @@ El sistema permite:
 ✅ **Sincronización en tiempo real** con la base de datos.  
 ✅ **Documentación de la API con Swagger**.  
 
+El proyecto se aloja en **Vercel** y **Railway** por lo que si desas probar el proyecto solo desde el frontend puedes acceder al link en el repositorio o mas abajo estará disponible el link directo, si te interesa probar el backend y ver su funcionamiento puedes acceder a la documentación de la API Swagger donde encontraras toda la informacion sobre como usar cada endpoint y podras probrarlas ahi mismo si deseas o un aplicaciones como insomnia o postman.
+
 ---
 
 ## **🚀 Tecnologías Utilizadas**  
@@ -35,7 +37,7 @@ El sistema permite:
 
 El proyecto sigue el **modelo MVC** para una mejor organización.  
 
-\`\`\`bash
+```bash
 📂 Proyecto
  ├── 📁 client  # Aplicación en React con DHTMLX Gantt (Frontend)
  ├── 📁 app     # API en Node.js con Express (Backend)
@@ -47,15 +49,25 @@ El proyecto sigue el **modelo MVC** para una mejor organización.
  │    │    ├── 📁 controllers # Lógica de negocio para CRUD
  │    ├── server.js     # Punto de entrada del backend
  ├── 📁 database  # Base de datos PostgreSQL alojada en Railway
-\`\`\`
+```
 
 ---
 
 ## **🌐 Despliegue en Producción**  
 
-- **Frontend (React) alojado en Vercel**: 🔗 [Enlace al Frontend](https://gantt-react.vercel.app)  
+- **Frontend (React) alojado en Vercel**: 🔗 [Enlace al Frontend](https://gantt-react-prueba-tecnica.vercel.app)  
 - **Backend (API en Express) alojado en Railway**: 🔗 [Enlace al Backend](https://gantt-react-prueba-tecnica-production.up.railway.app/health/status)  
 - **Documentación Swagger**: 🔗 [API Docs](https://gantt-react-prueba-tecnica-production.up.railway.app/api-docs/#/)  
+
+**!ADVERTENCIA! No intentes crear tareas o subtareas en actividades de proyecto (las que vienen por defecto ejemplo: Actividad de Proyecto A) ya que no se sincronizan con la base de datos y podria provocar errores es la unica falencia del proyecto lamento los inconvenientes que podrian causar.**
+
+---
+
+## EJEMPLO DE USO 
+
+Acontinuacion podras ver un ejemplo de uso del Gantt en el siguiente GIF, crear tareas, editar tareas y eliminarlas en tiempo real **(tambien puedes crear subtareas dentro de las tareas principales)**.
+
+![Ejemplo de uso del Gantt](https://github.com/tu-usuario/proyecto-gantt/blob/main/d:/Documents/proyectos/Gantt%20-%20React/client/src/assets/Ejemplo%20de%20uso%20del%20Gantt.gif)
 
 ---
 
