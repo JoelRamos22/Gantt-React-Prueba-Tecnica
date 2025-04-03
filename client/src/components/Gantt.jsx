@@ -65,95 +65,101 @@ export default function GanttView({ task, triggerRefresh }) {
 
       ganttInstance.current.attachEvent("onAfterTaskAdd", async (id, task) => {
         try {
-            const parentId = task.parent && task.parent !== "0" ? Number(task.parent) : null;
-    
-            const startDate = new Date(task.start_date);
-            const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + task.duration);
-    
-            const res = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks/create", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name: task.text,
-                    startDate: formatDateForGantt(startDate),
-                    duration: task.duration,
-                    endDate: formatDateForGantt(endDate),
-                    parentId: parentId,
-                }),
-            });
-    
-            const data = await res.json();
-    
-            if (!data.id) {
-                throw new Error("No se recibió un ID válido desde la API.");
-            }
-    
-            ganttInstance.current.changeTaskId(id, data.id);
-            console.log("Tarea creada con ID real:", data.id);
-    
-            triggerRefresh();
+          const parentId = task.parent && task.parent !== "0" ? Number(task.parent) : null;
+
+          const startDate = new Date(task.start_date);
+          const endDate = new Date(startDate);
+          endDate.setDate(startDate.getDate() + task.duration);
+
+          const res = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: task.text,
+              startDate: formatDateForGantt(startDate),
+              duration: task.duration,
+              endDate: formatDateForGantt(endDate),
+              parentId: parentId,
+            }),
+          });
+
+          const data = await res.json();
+
+          if (!data.id) {
+            throw new Error("No se recibió un ID válido desde la API.");
+          }
+
+          ganttInstance.current.changeTaskId(id, data.id);
+          console.log("Tarea creada con ID real:", data.id);
+
+          triggerRefresh();
         } catch (error) {
-            console.error("Error al crear la tarea:", error);
+          console.error("Error al crear la tarea:", error);
         }
-    });
-    
+      });
+
 
       /**
        * @description Evento que se ejecuta después de actualizar una tarea
        * @param {number} id - ID de la tarea
        * @param {object} task - Datos de la tarea actualizada
        */
-        ganttInstance.current.attachEvent("onAfterTaskUpdate", async (id, task) => {
-          try {
-              const startDate = new Date(task.start_date); 
-              const endDate = new Date(startDate); 
-              endDate.setDate(startDate.getDate() + task.duration); 
-      
-              await fetch(`https://gantt-react-prueba-tecnica-production.up.railway.app/tasks/update/${id}`, {
-                  method: "PUT",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                      name: task.text,
-                      startDate: formatDateForGantt(startDate),
-                      duration: task.duration,
-                      endDate: formatDateForGantt(endDate),
-                      parentId: task.parent !== 0 ? task.parent : null,
-                  }),
-              });
-      
-              console.log("Tarea actualizada.");
-              triggerRefresh();
-          } catch (error) {
-              console.error("Error al actualizar la tarea:", error);
-          }
+      ganttInstance.current.attachEvent("onAfterTaskUpdate", async (id, task) => {
+        try {
+          const startDate = new Date(task.start_date);
+          const endDate = new Date(startDate);
+          endDate.setDate(startDate.getDate() + task.duration);
+
+          await fetch(`https://gantt-react-prueba-tecnica-production.up.railway.app/tasks/update/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: task.text,
+              startDate: formatDateForGantt(startDate),
+              duration: task.duration,
+              endDate: formatDateForGantt(endDate),
+              parentId: task.parent !== 0 ? task.parent : null,
+            }),
+          });
+
+          console.log("Tarea actualizada.");
+          triggerRefresh();
+        } catch (error) {
+          console.error("Error al actualizar la tarea:", error);
+        }
+      });
+
+      /** 
+       * @description Evita que la vista del Gantt se mueva fuera del rango de fechas permitidas 
+       */
+      ganttInstance.current.attachEvent("onBeforeGanttRender", function () {
+        const minDate = new Date(2023, 0, 1);
+        const maxDate = new Date(2030, 11, 31);
+        const state = ganttInstance.current.getState();
+
+        // Si la vista está fuera de los límites, la ajustamos
+        if (state.min_date < minDate) {
+          ganttInstance.current.setScrollPosition(ganttInstance.current.dateToPos(minDate), null);
+        }
+        if (state.max_date > maxDate) {
+          ganttInstance.current.setScrollPosition(ganttInstance.current.dateToPos(maxDate), null);
+        }
       });
 
       /**
-       * @description Se ejecuta este evento para evitar que la vista se mueva fuera de los límites de la fecha
-       * @param {number} id - ID de la tarea
-       * @param {object} task - Datos de la tarea actualizada
-       */
-      ganttInstance.attachEvent("onBeforeGanttRender", function () {
-        const minDate = new Date(2023, 0, 1);
-        const maxDate = new Date(2030, 11, 31);
-
-        if (ganttInstance.current.getState().min_date < minDate) {
-          ganttInstance.current.render();
-          ganttInstance.current.showDate(minDate);
-        }
-        if (ganttInstance.current.getState().max_date > maxDate) {
-          ganttInstance.current.render();
-          ganttInstance.current.showDate(maxDate);
-        }
-      });
-
-      /** @description Se ejecuta este evento para evitar que las tareas se muevan fuera de los límites de la fecha */   
+      * @description Evita que las tareas que están fuera del rango de fechas sean visibles
+      * @param {number} id - ID de la tarea
+      * @param {object} task - Datos de la tarea
+      */
       ganttInstance.current.attachEvent("onBeforeTaskDisplay", function (id, task) {
         const minDate = new Date(2023, 0, 1);
         const maxDate = new Date(2030, 11, 31);
 
-        return formatDateForGantt(task.start_date) >= minDate && formatDateForGantt(task.end_date) <= maxDate;
+        // Convertimos las fechas de la tarea en objetos Date válidos
+        const startDate = new Date(task.start_date);
+        const endDate = new Date(task.end_date);
+
+        return startDate >= minDate && endDate <= maxDate;
       });
 
 
