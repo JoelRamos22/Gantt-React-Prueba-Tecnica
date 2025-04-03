@@ -1,14 +1,18 @@
 const Task = require('../models/Task');
-const sequelize = require('../../config/database');
 
 // Obtener todas las tareas con sus subtareas
 exports.getAllTasks = async (req, res) => {
     try {
-        const tasks = await Task.findAll({
-            where: { parentId: null }, // Solo tareas principales
+        const tasks = await Task.findAll({ 
             include: [{
                 model: Task,
-                as: 'subtasks' // Alias definido en la asociación de modelos
+                as: 'subtasks', 
+                include: [
+                    {
+                        model: Task,
+                        as: 'subtasks' 
+                    }
+                ]
             }]
         });
         res.json(tasks);
@@ -21,7 +25,6 @@ exports.getAllTasks = async (req, res) => {
 exports.getById = async (req, res) => {
     try {
         const { id } = req.params;
-        await sequelize.sync();
 
         const task = await Task.findByPk(id, {
             include: [{
@@ -50,7 +53,7 @@ exports.create = async (req, res) => {
             startDate,
             duration,
             endDate,
-            parentId: parentId || null // Si no tiene parentId, es tarea principal
+            parentId: parentId || null 
         });
 
         res.status(201).json(task);
@@ -65,7 +68,6 @@ exports.update = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, startDate, duration, endDate, parentId } = req.body;
-        await sequelize.sync();
 
         const task = await Task.findByPk(id);
         if (!task) {
@@ -83,7 +85,6 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     try {
         const { id } = req.params;
-        await sequelize.sync();
 
         const task = await Task.findByPk(id, {
             include: [{ model: Task, as: 'subtasks' }]
@@ -93,7 +94,6 @@ exports.delete = async (req, res) => {
             return res.status(404).json({ error: 'Tarea no encontrada' });
         }
 
-        // Eliminar subtareas primero
         if (task.subtasks.length > 0) {
             await Task.destroy({ where: { parentId: id } });
         }

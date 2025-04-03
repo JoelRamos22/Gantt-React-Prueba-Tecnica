@@ -59,7 +59,12 @@ El proyecto sigue el **modelo MVC** para una mejor organización.
 - **Backend (API en Express) alojado en Railway**: 🔗 [Enlace al Backend](https://gantt-react-prueba-tecnica-production.up.railway.app/health/status)  
 - **Documentación Swagger**: 🔗 [API Docs](https://gantt-react-prueba-tecnica-production.up.railway.app/api-docs/#/)  
 
-**!ADVERTENCIA! No intentes crear tareas o subtareas en actividades de proyecto (las que vienen por defecto ejemplo: Actividad de Proyecto A) ya que no se sincronizan con la base de datos y podria provocar errores es la unica falencia del proyecto lamento los inconvenientes que podrian causar.**
+---
+
+## AÑADIDOS DESTACADOS 
+- **Ahora puedes crear tareas principales en las tareas de proyectos predeterminados y a su vez crear subtareas dentro de las mismas.**
+- **Puedes actualizar las fechas de cualquier tarea en el gantt usando el drag and drop mueve la tarea a donde quieras en el calendario y la fecha se actualiza automáticamente.**
+- **Se agregaron limites a las fechas disponibles entre el 2023 y el 2026 para las tareas para acercarse algo mas a la realidad.**
 
 ---
 
@@ -67,7 +72,7 @@ El proyecto sigue el **modelo MVC** para una mejor organización.
 
 Acontinuacion podras ver un ejemplo de uso del Gantt en el siguiente GIF, crear tareas, editar tareas y eliminarlas en tiempo real **(tambien puedes crear subtareas dentro de las tareas principales)**.
 
-![Ejemplo de uso del Gantt](https://github.com/tu-usuario/proyecto-gantt/blob/main/d:/Documents/proyectos/Gantt%20-%20React/client/src/assets/Ejemplo%20de%20uso%20del%20Gantt.gif)
+![Ejemplo de uso del Gantt](https://github.com/JoelRamos22/Gantt-React-Prueba-Tecnica/blob/test-branch/client/public/GIF%20prueba%20tecnica.gif)
 
 ---
 

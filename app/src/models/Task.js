@@ -17,6 +17,7 @@ const Task = sequelize.define('Task', {
     timestamps: true
 });
 
+//Relacion con subtareas (una tarea puede tener muchas subtareas)
 Task.hasMany(Task, { foreignKey: 'parentId', as: 'subtasks' });
 Task.belongsTo(Task, { foreignKey: 'parentId', as: 'parentTask' });
 

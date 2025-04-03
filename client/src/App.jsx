@@ -41,66 +41,61 @@
 
 
 
-  function App() {
-    const [tasks, setTasks] = useState({ data: [] });
-    const [refreshTrigger, setRefreshTrigger] = useState(false);
-  
-    async function fetchData() {
-      try {
-        const res = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks");
-        const data = await res.json();
-        console.log("Datos recibidos:", data);
-  
-        const processedTasks = [];
-  
-        const defaultTasks = [
-          { id: "1", text: "Actividad de proyecto A", start_date: formatDateForGantt(new Date()), duration: 1, parent: 0 },
-          { id: "2", text: "Actividad de proyecto B", start_date: formatDateForGantt(new Date()), duration: 2, parent: 0 },
-          { id: "3", text: "Actividad de proyecto C", start_date: formatDateForGantt(new Date()), duration: 4, parent: 0 },
-        ];
-  
-        data.forEach((t) => {
-          processedTasks.push({
-            id: t.id,
-            text: t.name,
-            start_date: formatDateForGantt(t.startDate),
-            duration: t.duration,
-            end_date: formatDateForGantt(
-              new Date(t.startDate).setDate(new Date(t.startDate).getDate() + t.duration)
-            ),
-            parent: t.parentId || 0,
-          });
-  
-          if (Array.isArray(t.subtasks) && t.subtasks.length > 0) {
-            t.subtasks.forEach((sub) => {
+    function App() {
+      const [tasks, setTasks] = useState({ data: [] });
+      const [refreshTrigger, setRefreshTrigger] = useState(false);
+    
+      async function fetchData() {
+        try {
+          const res = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks");
+          const data = await res.json();
+          console.log("Datos recibidos:", data);
+    
+          const processedTasks = [];
+    
+          data.forEach((t) => {
               processedTasks.push({
-                id: sub.id,
-                text: sub.name,
-                start_date: formatDateForGantt(sub.startDate),
-                duration: sub.duration,
-                end_date: formatDateForGantt(
-                  new Date(sub.startDate).setDate(new Date(sub.startDate).getDate() + sub.duration)
-                ),
-                parent: t.id,
+                  id: t.id,
+                  text: t.name,
+                  start_date: formatDateForGantt(t.startDate),
+                  duration: t.duration,
+                  end_date: formatDateForGantt(
+                      new Date(t.startDate).setDate(new Date(t.startDate).getDate() + t.duration)
+                  ),
+                  parent: t.parentId || 0, // Si no tiene parent, es una tarea raíz
               });
-            });
-          }
-        });
-  
-        processedTasks.unshift(...defaultTasks);
-  
-        setTasks({ data: processedTasks });
-      } catch (error) {
-        console.error("Error al obtener datos del Gantt:", error);
+
+              // ✅ Verificar que t.subtasks está definido antes de iterar
+              if (t.subtasks && Array.isArray(t.subtasks) && t.subtasks.length > 0) {
+                  t.subtasks.forEach((sub) => {
+                      processedTasks.push({
+                          id: sub.id,
+                          text: sub.name,
+                          start_date: formatDateForGantt(sub.startDate),
+                          duration: sub.duration,
+                          end_date: formatDateForGantt(
+                              new Date(sub.startDate).setDate(new Date(sub.startDate).getDate() + sub.duration)
+                          ),
+                          parent: sub.parentId || t.id, 
+                      });
+                  });
+              } 
+          });
+
+    
+    
+          setTasks({ data: processedTasks });
+        } catch (error) {
+          console.error("Error al obtener datos del Gantt:", error);
+        }
       }
+    
+      useEffect(() => {
+        fetchData();
+      }, [refreshTrigger]); 
+    
+      return <GanttView task={tasks} triggerRefresh={() => setRefreshTrigger(prev => !prev)} />;
     }
-  
-    useEffect(() => {
-      fetchData();
-    }, [refreshTrigger]); 
-  
-    return <GanttView task={tasks} triggerRefresh={() => setRefreshTrigger(prev => !prev)} />;
-  }
-  
-  export default App;
+    
+    export default App;
   
