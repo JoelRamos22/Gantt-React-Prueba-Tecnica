@@ -54,32 +54,33 @@
           const processedTasks = [];
     
           data.forEach((t) => {
-            processedTasks.push({
-              id: t.id,
-              text: t.name,
-              start_date: formatDateForGantt(t.startDate),
-              duration: t.duration,
-              end_date: formatDateForGantt(
-                new Date(t.startDate).setDate(new Date(t.startDate).getDate() + t.duration)
-              ),
-              parent: t.parentId || 0,
-            });
-    
-            if (Array.isArray(t.subtasks) && t.subtasks.length > 0) {
-              t.subtasks.forEach((sub) => {
-                processedTasks.push({
-                  id: sub.id,
-                  text: sub.name,
-                  start_date: formatDateForGantt(sub.startDate),
-                  duration: sub.duration,
+              processedTasks.push({
+                  id: t.id,
+                  text: t.name,
+                  start_date: formatDateForGantt(t.startDate),
+                  duration: t.duration,
                   end_date: formatDateForGantt(
-                    new Date(sub.startDate).setDate(new Date(sub.startDate).getDate() + sub.duration)
+                      new Date(t.startDate).setDate(new Date(t.startDate).getDate() + t.duration)
                   ),
-                  parent: t.id,
-                });
+                  parent: t.parentId || 0, 
               });
-            }
+
+              if (t.subtasks && Array.isArray(t.subtasks) && t.subtasks.length > 0) {
+                  t.subtasks.forEach((sub) => {
+                      processedTasks.push({
+                          id: sub.id,
+                          text: sub.name,
+                          start_date: formatDateForGantt(sub.startDate),
+                          duration: sub.duration,
+                          end_date: formatDateForGantt(
+                              new Date(sub.startDate).setDate(new Date(sub.startDate).getDate() + sub.duration)
+                          ),
+                          parent: sub.parentId || t.id, 
+                      });
+                  });
+              }
           });
+
     
     
           setTasks({ data: processedTasks });

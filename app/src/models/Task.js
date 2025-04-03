@@ -18,7 +18,7 @@ const Task = sequelize.define('Task', {
 });
 
 //Relacion con subtareas (una tarea puede tener muchas subtareas)
-Task.hasMany(Task, { foreignKey: 'parentId', as: 'subtasks' });
-Task.belongsTo(Task, { foreignKey: 'parentId', as: 'parentTask' });
+Task.hasMany(Task, { foreignKey: 'parentId', as: 'children' });
+Task.belongsTo(Task, { foreignKey: 'parentId', as: 'parent' });
 
 module.exports = Task;

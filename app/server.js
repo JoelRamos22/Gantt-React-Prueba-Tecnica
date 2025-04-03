@@ -31,28 +31,34 @@ app.use('/tasks', taskRoutes);
  */
 async function insertDefaultProjectsAsTasks() {
     try {
-      const projects = [
-        { name: "Proyecto A", startDate: "2024-04-01 00:00", duration: 10, endDate: "2024-04-11 23:59" },
-        { name: "Proyecto B", startDate: "2024-04-05 00:00", duration: 15, endDate: "2024-04-20 23:59" },
-        { name: "Proyecto C", startDate: "2024-04-10 00:00", duration: 20, endDate: "2024-04-30 23:59" },
-        { name: "Proyecto D", startDate: "2024-04-15 00:00", duration: 25, endDate: "2024-05-10 23:59" },
-      ];
-  
-      for (const project of projects) {
-        await Task.upsert({
-          name: project.name,
-          startDate: project.startDate, 
-          duration: project.duration,
-          endDate: project.endDate, 
-          parentId: null, 
-        });
-      }
-  
-      console.log("✅ Tareas 'proyecto' insertadas correctamente.");
+        const projects = [
+            { name: "Proyecto A", startDate: "2024-04-01 00:00", duration: 10, endDate: "2024-04-11 23:59" },
+            { name: "Proyecto B", startDate: "2024-04-05 00:00", duration: 15, endDate: "2024-04-20 23:59" },
+            { name: "Proyecto C", startDate: "2024-04-10 00:00", duration: 20, endDate: "2024-04-30 23:59" },
+            { name: "Proyecto D", startDate: "2024-04-15 00:00", duration: 25, endDate: "2024-05-10 23:59" },
+        ];
+
+        for (const project of projects) {
+            const existingTask = await Task.findOne({ where: { name: project.name } });
+
+            if (!existingTask) {
+                await Task.create({
+                    name: project.name,
+                    startDate: project.startDate,
+                    duration: project.duration,
+                    endDate: project.endDate,
+                    parentId: null,
+                });
+                console.log(`✅ Tarea '${project.name}' insertada.`);
+            } else {
+                console.log(`🔹 La tarea '${project.name}' ya existe, no se insertó.`);
+            }
+        }
     } catch (error) {
-      console.error("❌ Error insertando tareas 'proyecto':", error);
+        console.error("❌ Error insertando tareas 'proyecto':", error);
     }
-  }
+}
+
 
 /**
  * * Conectar con la base de datos y arrancar el servidor
