@@ -1,25 +1,25 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
-const ProjectActivity = require('./ProjectActivity');
 
-const Task = sequelize.define('tasks', {
+const Task = sequelize.define('Task', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: DataTypes.STRING, allowNull: false },
-    startDate: { type: DataTypes.DATE, allowNull: false },
+    startDate: { type: DataTypes.STRING, allowNull: false },
     duration: { type: DataTypes.INTEGER, allowNull: false },
-    endDate: { type: DataTypes.DATE, allowNull: false },
-    projectActivityId: { 
+    endDate: { type: DataTypes.STRING, allowNull: false },
+    parentId: { 
         type: DataTypes.INTEGER, 
-        allowNull: false, 
-        references: { model: 'projects', key: 'id' } 
+        allowNull: true,  // 🔹 NULL significa que es una tarea principal
+        references: { model: 'tasks', key: 'id' }
     }
 }, {
     tableName: 'tasks',
     timestamps: true
 });
 
-// Corregimos la relación para evitar problemas
-Task.belongsTo(ProjectActivity, { foreignKey: 'projectActivityId', as: 'project' });
-ProjectActivity.hasMany(Task, { foreignKey: 'projectActivityId', as: 'tasks' });
+// 🔹 Relación para obtener subtareas de una tarea
+Task.hasMany(Task, { foreignKey: 'parentId', as: 'subtasks' });
+// 🔹 Relación para obtener la tarea padre de una subtarea
+Task.belongsTo(Task, { foreignKey: 'parentId', as: 'parentTask' });
 
 module.exports = Task;

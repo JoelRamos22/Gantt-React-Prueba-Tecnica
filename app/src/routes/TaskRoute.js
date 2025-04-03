@@ -1,41 +1,41 @@
 const express = require('express');
 const router = express.Router();
-const Taskscontroller = require('../controllers/TaskController');
+const TasksController = require('../controllers/TaskController');
 
 /**
  * @swagger
- * /tasks/project/{projectActivityId}:
+ * /tasks:
  *   get:
- *     summary: Obtiene todas las tareas de un proyecto
- *     tags:
+ *     summary: Obtener todas las tareas y subtareas
+ *     description: Retorna una lista de todas las tareas y subtareas en la base de datos.
+ *     tags: 
  *       - Tasks
- *     parameters:
- *       - in: path
- *         name: projectActivityId
- *         required: true
- *         description: ID del proyecto al que pertenecen las tareas
- *         schema:
- *           type: integer
  *     responses:
  *       200:
- *         description: Lista de tareas obtenida correctamente
+ *         description: Lista de tareas y subtareas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
  *       500:
  *         description: Error al obtener las tareas
  */
-router.get('/:projectActivityId', Taskscontroller.getAllByProject);
+router.get('/', TasksController.getAllTasks);
 
 /**
  * @swagger
  * /tasks/{id}:
  *   get:
- *     summary: Obtiene una tarea por su ID
+ *     summary: Obtiene una tarea o subtarea por su ID
  *     tags:
  *       - Tasks
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la tarea a buscar
+ *         description: ID de la tarea o subtarea a buscar
  *         schema:
  *           type: integer
  *     responses:
@@ -46,22 +46,16 @@ router.get('/:projectActivityId', Taskscontroller.getAllByProject);
  *       500:
  *         description: Error al obtener la tarea
  */
-router.get('/:id', Taskscontroller.getById);
+router.get('/:id', TasksController.getById);
 
 /**
  * @swagger
- * /tasks/create/{projectActivityId}:
+ * /tasks/create:
  *   post:
- *     summary: Crea una nueva tarea en un proyecto específico
+ *     summary: Crea una nueva tarea o subtarea
+ *     description: Crea una nueva tarea (sin `parentId`) o una subtarea (con `parentId`).
  *     tags:
  *       - Tasks
- *     parameters:
- *       - in: path
- *         name: projectActivityId
- *         required: true
- *         description: ID del proyecto en el que se creará la tarea
- *         schema:
- *           type: integer
  *     requestBody:
  *       required: true
  *       content:
@@ -75,36 +69,38 @@ router.get('/:id', Taskscontroller.getById);
  *               startDate:
  *                 type: string
  *                 format: date
- *                 example: "2025-04-02"
+ *                 example: "2024-04-02"
  *               duration:
  *                 type: integer
  *                 example: 5
  *               endDate:
  *                 type: string
  *                 format: date
- *                 example: "2025-04-07"
+ *                 example: "2024-04-07"
+ *               parentId:
+ *                 type: integer
+ *                 nullable: true
+ *                 example: null
  *     responses:
  *       201:
  *         description: Tarea creada exitosamente
- *       404:
- *         description: Proyecto no encontrado
  *       500:
- *         description: Error interno al crear la tarea
+ *         description: Error al crear la tarea
  */
-router.post('/create/:projectActivityId', Taskscontroller.create);
+router.post('/create', TasksController.create);
 
 /**
  * @swagger
  * /tasks/update/{id}:
  *   put:
- *     summary: Actualiza los datos de una tarea existente
+ *     summary: Actualiza los datos de una tarea o subtarea existente
  *     tags:
  *       - Tasks
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la tarea a actualizar
+ *         description: ID de la tarea o subtarea a actualizar
  *         schema:
  *           type: integer
  *     requestBody:
@@ -120,14 +116,18 @@ router.post('/create/:projectActivityId', Taskscontroller.create);
  *               startDate:
  *                 type: string
  *                 format: date
- *                 example: "2025-04-02"
+ *                 example: "2024-04-02"
  *               duration:
  *                 type: integer
  *                 example: 3
  *               endDate:
  *                 type: string
  *                 format: date
- *                 example: "2025-04-05"
+ *                 example: "2024-04-05"
+ *               parentId:
+ *                 type: integer
+ *                 nullable: true
+ *                 example: 1
  *     responses:
  *       200:
  *         description: Tarea actualizada correctamente
@@ -136,20 +136,21 @@ router.post('/create/:projectActivityId', Taskscontroller.create);
  *       500:
  *         description: Error al actualizar la tarea
  */
-router.put('/update/:id', Taskscontroller.update);
+router.put('/update/:id', TasksController.update);
 
 /**
  * @swagger
  * /tasks/delete/{id}:
  *   delete:
- *     summary: Elimina una tarea específica
+ *     summary: Elimina una tarea o subtarea
+ *     description: Si se elimina una tarea, también se eliminan sus subtareas asociadas.
  *     tags:
  *       - Tasks
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la tarea a eliminar
+ *         description: ID de la tarea o subtarea a eliminar
  *         schema:
  *           type: integer
  *     responses:
@@ -160,6 +161,6 @@ router.put('/update/:id', Taskscontroller.update);
  *       500:
  *         description: Error al eliminar la tarea
  */
-router.delete('/delete/:id', Taskscontroller.delete);
+router.delete('/delete/:id', TasksController.delete);
 
 module.exports = router;
