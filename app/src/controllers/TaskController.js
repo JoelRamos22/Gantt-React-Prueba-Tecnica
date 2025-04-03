@@ -3,11 +3,16 @@ const Task = require('../models/Task');
 // Obtener todas las tareas con sus subtareas
 exports.getAllTasks = async (req, res) => {
     try {
-        const tasks = await Task.findAll({
-            where: { parentId: null }, 
+        const tasks = await Task.findAll({ 
             include: [{
                 model: Task,
-                as: 'subtasks' 
+                as: 'subtasks', 
+                include: [
+                    {
+                        model: Task,
+                        as: 'subtasks' 
+                    }
+                ]
             }]
         });
         res.json(tasks);
