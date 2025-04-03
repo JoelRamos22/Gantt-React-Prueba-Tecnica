@@ -57,6 +57,7 @@
         console.log("Datos de proyectos:", projectsData);
   
         const processedTasks = [];
+        const projectMap = {};
   
         projectsData.forEach((p) => {
           processedTasks.push({
@@ -70,12 +71,14 @@
             type: "project", 
             parent: 0,
           });
+
           projectMap[p.id] = p.id;
         });
   
         // Procesar tareas
         tasksData.forEach((t) => {
           const parentId = t.parentId ? t.parentId : (projectMap[t.projectId] || 0)
+
           processedTasks.push({
             id: t.id,
             text: t.name,
