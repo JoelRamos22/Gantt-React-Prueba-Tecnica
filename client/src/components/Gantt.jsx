@@ -98,7 +98,7 @@ export default function GanttView({ task, triggerRefresh }) {
         }
       });
 
-      const minDate = new Date(2023, 0, 1);
+      const minDate = new Date(2024, 0, 1);
       ganttInstance.current.attachEvent("onBeforeTaskAdd", function (id, task) {
           const startDate = new Date(task.start_date);
       
