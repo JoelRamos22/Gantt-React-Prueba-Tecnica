@@ -65,7 +65,7 @@ export default function GanttView({ task, triggerRefresh }) {
         try {
           const parentId = task.parent && task.parent !== "0" ? Number(task.parent) : null;
           
-          const res = await fetch("gantt-react-prueba-tecnica-production.up.railway.app/tasks/create", {
+          const res = await fetch("https://gantt-react-prueba-tecnica-production.up.railway.app/tasks/create", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -96,7 +96,7 @@ export default function GanttView({ task, triggerRefresh }) {
        */
       ganttInstance.current.attachEvent("onAfterTaskUpdate", async (id, task) => {
         try {
-          await fetch(`gantt-react-prueba-tecnica-production.up.railway.app/tasks/update/${id}`, {
+          await fetch(`https://gantt-react-prueba-tecnica-production.up.railway.app/tasks/update/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -121,7 +121,7 @@ export default function GanttView({ task, triggerRefresh }) {
        */
       ganttInstance.current.attachEvent("onAfterTaskDelete", async (id) => {
         try {
-          await fetch(`gantt-react-prueba-tecnica-production.up.railway.app/tasks/delete/${id}`, { method: "DELETE" });
+          await fetch(`https://gantt-react-prueba-tecnica-production.up.railway.app/tasks/delete/${id}`, { method: "DELETE" });
           console.log("Tarea eliminada.");
           triggerRefresh(); // 🔹 Recarga App después de eliminar una tarea
         } catch (error) {
